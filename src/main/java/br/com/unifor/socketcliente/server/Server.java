@@ -12,7 +12,7 @@ public class Server {
 
   public Server() {
     try {
-      ServerSocket server = new ServerSocket(6688);
+      ServerSocket server = new ServerSocket(5555);
       while (true) {
         Socket socket = server.accept();
         new Thread(new EscutaCliente(socket)).start();
@@ -43,7 +43,9 @@ public class Server {
     public void run() {
       try {
         String texto;
-        while ((texto = leitor.nextLine()) != null) {
+//        StringBuilder sb = new StringBuilder();
+//        sb.append(App.txtCpu.getText()).append("|").append(App.txtMemoria.getText()).append("|").append(App.txtBloq.getText());
+        while ((texto = leitores.get(0).nextLine()) != null) {
           encaminharParaTodos(texto);
         }
       } catch (Exception e) {
@@ -53,8 +55,8 @@ public class Server {
 
     private void encaminharParaTodos(String texto) {
       System.out.println(texto);
-      escritor.println(texto);
-      escritor.flush();
+      escritores.get(0).println(texto);
+      escritores.get(0).flush();
     }
   }
 }

@@ -4,12 +4,12 @@ public class Program {
   public static void main(String[] args) {
     new Thread(new ExecutaServer()).start();
 
-    try {
+    /*try {
       Client client = new Client("localhost", 5555);
       client.configurarRede();
     } catch (Exception e) {
       e.printStackTrace();
-    }
+    }*/
   }
 
   private static class ExecutaServer implements Runnable {

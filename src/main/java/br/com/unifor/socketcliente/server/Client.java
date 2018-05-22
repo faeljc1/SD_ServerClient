@@ -8,7 +8,7 @@ public class Client {
   private Scanner scanner;
   private PrintWriter write;
   private String ipAddress;
-  private int port;
+  private Integer port;
 
   public Client(String ipAddress, int port) {
     this.ipAddress = ipAddress;
@@ -24,15 +24,42 @@ public class Client {
 
   private class EscutaServidor implements Runnable {
     public void run() {
-      try {
-        String texto;
-        while ((texto = scanner.nextLine()) != null) {
-          write.println(texto);
-          write.flush();
-        }
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
+      StringBuilder sb = new StringBuilder();
+      sb.append(App.txtCpu.getText()).append("|").append(App.txtMemoria.getText()).append("|").append(App.txtBloq.getText());
+      write.println(sb.toString());
+      write.flush();
     }
+  }
+
+  public Scanner getScanner() {
+    return scanner;
+  }
+
+  public void setScanner(Scanner scanner) {
+    this.scanner = scanner;
+  }
+
+  public PrintWriter getWrite() {
+    return write;
+  }
+
+  public void setWrite(PrintWriter write) {
+    this.write = write;
+  }
+
+  public String getIpAddress() {
+    return ipAddress;
+  }
+
+  public void setIpAddress(String ipAddress) {
+    this.ipAddress = ipAddress;
+  }
+
+  public Integer getPort() {
+    return port;
+  }
+
+  public void setPort(Integer port) {
+    this.port = port;
   }
 }
