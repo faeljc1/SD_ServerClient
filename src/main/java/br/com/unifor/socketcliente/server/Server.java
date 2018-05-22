@@ -12,7 +12,7 @@ public class Server {
 
   public Server() {
     try {
-      ServerSocket server = new ServerSocket(5555);
+      ServerSocket server = new ServerSocket(55555);
       while (true) {
         Socket socket = server.accept();
         new Thread(new EscutaCliente(socket)).start();
@@ -43,8 +43,6 @@ public class Server {
     public void run() {
       try {
         String texto;
-//        StringBuilder sb = new StringBuilder();
-//        sb.append(App.txtCpu.getText()).append("|").append(App.txtMemoria.getText()).append("|").append(App.txtBloq.getText());
         while ((texto = leitores.get(0).nextLine()) != null) {
           encaminharParaTodos(texto);
         }
@@ -54,6 +52,15 @@ public class Server {
     }
 
     private void encaminharParaTodos(String texto) {
+      String[] params = texto.split("\\|");
+
+      Integer cpuTotal = Integer.parseInt(App.txtCpuTotal.getText()) + Integer.parseInt(params[0]);
+      App.txtCpuTotal.setText(cpuTotal.toString());
+      Integer memoriaTotal = Integer.parseInt(App.txtMemoriaTotal.getText()) + Integer.parseInt(params[0]);
+      App.txtMemoriaTotal.setText(cpuTotal.toString());
+      Integer bloqTotal = Integer.parseInt(App.txtBloqTotal.getText()) + Integer.parseInt(params[0]);
+      App.txtBloqTotal.setText(cpuTotal.toString());
+
       System.out.println(texto);
       escritores.get(0).println(texto);
       escritores.get(0).flush();
