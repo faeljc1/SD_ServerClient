@@ -72,16 +72,19 @@ public class App extends JFrame {
 
     txtCpu = new JTextField();
     txtCpu.setBounds(59, 211, 201, 26);
+    txtCpu.setText("100");
     contentPane.add(txtCpu);
     txtCpu.setColumns(10);
 
     txtMemoria = new JTextField();
     txtMemoria.setBounds(59, 239, 201, 26);
+    txtMemoria.setText("100");
     contentPane.add(txtMemoria);
     txtMemoria.setColumns(10);
 
     txtBloq = new JTextField();
     txtBloq.setBounds(59, 267, 201, 26);
+    txtBloq.setText("100");
     contentPane.add(txtBloq);
     txtBloq.setColumns(10);
 
@@ -125,7 +128,6 @@ public class App extends JFrame {
 
     txtCpuTotal = new JTextField();
     txtCpuTotal.setEnabled(false);
-    txtCpuTotal.setText("TES");
     txtCpuTotal.setColumns(10);
     txtCpuTotal.setBounds(311, 211, 201, 26);
     contentPane.add(txtCpuTotal);
@@ -148,5 +150,7 @@ public class App extends JFrame {
     contentPane.add(txtIp);
 
     btnSubmit.addActionListener(new ConectarAction());
+
+    new Thread(new ExecuteServer()).start();
   }
 }

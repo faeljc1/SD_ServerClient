@@ -24,7 +24,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>br.com.unifor.sistemasdistribuidos.Application</mainClass>
+              <mainClass>br.com.unifor.socketcliente.server.App</mainClass>
             </manifest>
           </archive>
           <descriptorRefs>

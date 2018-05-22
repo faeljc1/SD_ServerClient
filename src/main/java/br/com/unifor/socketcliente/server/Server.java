@@ -4,17 +4,24 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class Server {
+  private ListClient list = ListClient.getInstance();
+  private Scanner scanner;
+  private PrintWriter writer;
 
   public Server() {
     try {
       ServerSocket server = new ServerSocket(55555);
       while (true) {
         Socket socket = server.accept();
+        String ip = socket.getInetAddress().toString().replace("/", "");
+        if (!list.containsIp(ip)) {
+          list.getClients().add(new Entity(socket, ip));
+        } else {
+          list.getEntity(ip).setSocket(socket);
+        }
         new Thread(new EscutaCliente(socket)).start();
       }
     } catch (IOException e) {
@@ -23,18 +30,10 @@ public class Server {
   }
 
   private class EscutaCliente implements Runnable {
-    Scanner leitor;
-    PrintWriter escritor;
-    String enderecoCliente;
-    List<PrintWriter> escritores = new ArrayList<>();
-    List<Scanner> leitores = new ArrayList<>();
-
     public EscutaCliente(Socket socket) {
       try {
-        enderecoCliente = socket.getInetAddress().toString() + ":" + socket.getPort();
-        enderecoCliente = enderecoCliente.replace("/", "");
-        leitores.add(new Scanner(socket.getInputStream()));
-        escritores.add(new PrintWriter(socket.getOutputStream()));
+        scanner = new Scanner(socket.getInputStream());
+        writer = new PrintWriter(socket.getOutputStream());
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -43,7 +42,7 @@ public class Server {
     public void run() {
       try {
         String texto;
-        while ((texto = leitores.get(0).nextLine()) != null) {
+        while ((texto = scanner.nextLine()) != null) {
           encaminharParaTodos(texto);
         }
       } catch (Exception e) {
@@ -54,16 +53,17 @@ public class Server {
     private void encaminharParaTodos(String texto) {
       String[] params = texto.split("\\|");
 
-      Integer cpuTotal = Integer.parseInt(App.txtCpuTotal.getText()) + Integer.parseInt(params[0]);
+      Integer cpu = !App.txtCpuTotal.getText().equals("") ? Integer.parseInt(App.txtCpuTotal.getText()) : 0;
+      Integer cpuTotal = cpu + Integer.parseInt(params[0]);
       App.txtCpuTotal.setText(cpuTotal.toString());
-      Integer memoriaTotal = Integer.parseInt(App.txtMemoriaTotal.getText()) + Integer.parseInt(params[0]);
-      App.txtMemoriaTotal.setText(cpuTotal.toString());
-      Integer bloqTotal = Integer.parseInt(App.txtBloqTotal.getText()) + Integer.parseInt(params[0]);
-      App.txtBloqTotal.setText(cpuTotal.toString());
 
-      System.out.println(texto);
-      escritores.get(0).println(texto);
-      escritores.get(0).flush();
+      Integer memoria = !App.txtMemoriaTotal.getText().equals("") ? Integer.parseInt(App.txtMemoriaTotal.getText()) : 0;
+      Integer memoriaTotal = memoria + Integer.parseInt(params[0]);
+      App.txtMemoriaTotal.setText(memoriaTotal.toString());
+
+      Integer bloq = !App.txtBloqTotal.getText().equals("") ? Integer.parseInt(App.txtBloqTotal.getText()) : 0;
+      Integer bloqTotal = bloq + Integer.parseInt(params[0]);
+      App.txtBloqTotal.setText(bloqTotal.toString());
     }
   }
 }
