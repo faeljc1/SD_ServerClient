@@ -6,7 +6,7 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class Server {
-  private ListClient list = ListClient.getInstance();
+  private TableList list = TableList.getInstance();
   private Scanner scanner;
   private String ip;
 
@@ -22,6 +22,7 @@ public class Server {
           list.getEntity(ip).setSocket(socket);
         }
         new Thread(new EscutaCliente(socket)).start();
+        list.pesquisar();
       }
     } catch (IOException e) {
       e.printStackTrace();
