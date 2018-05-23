@@ -13,13 +13,17 @@ public class App extends JFrame {
   public static JTextField txtCpu;
   public static JTextField txtMemoria;
   public static JTextField txtBloq;
-  public static JTable table;
-  public static JTable table_1;
-  public static JTable table_2;
   public static JTextField txtCpuTotal;
   public static JTextField txtMemoriaTotal;
   public static JTextField txtBloqTotal;
   public static JTextField txtIp;
+
+  public static JTable tabela;
+  public static JScrollPane barraRolagemTabela;
+  public static DefaultTableModel modelo = new DefaultTableModel();
+
+  public static JTextPane txtLog;
+  public static JScrollPane barraRolagemTexto;
 
   /**
    * Launch the application.
@@ -88,22 +92,17 @@ public class App extends JFrame {
     contentPane.add(txtBloq);
     txtBloq.setColumns(10);
 
-    JScrollPane srcArea = new JScrollPane();
-    srcArea.setBounds(6, 33, 254, 148);
-    contentPane.add(srcArea);
+    criaJTable();
 
-    JTextArea textArea = new JTextArea();
-    srcArea.setViewportView(textArea);
+    txtLog = new JTextPane();
+    txtLog.setEditable(false);
+    barraRolagemTexto = new JScrollPane(txtLog);
+    barraRolagemTexto.setBounds(6, 33, 254, 148);
+    contentPane.add(barraRolagemTexto);
 
-    JScrollPane scrTabela = new JScrollPane();
-    scrTabela.setBounds(272, 33, 240, 120);
-    contentPane.add(scrTabela);
-
-    table_1 = new JTable();
-    scrTabela.setViewportView(table_1);
-    table_1.setModel(new DefaultTableModel(new Object[][]{
-
-    }, new String[]{"Destino", "Porta"}));
+    barraRolagemTabela = new JScrollPane(tabela);
+    barraRolagemTabela.setBounds(272, 33, 240, 120);
+    contentPane.add(barraRolagemTabela);
 
     JButton btnSubmit = new JButton("OK");
     btnSubmit.setBounds(431, 157, 80, 29);
@@ -152,5 +151,21 @@ public class App extends JFrame {
     btnSubmit.addActionListener(new ConectarAction());
 
     new Thread(new ExecuteServer()).start();
+  }
+
+  private void criaJTable() {
+    modelo = new DefaultTableModel() {
+      private static final long serialVersionUID = 1L;
+
+      public boolean isCellEditable(int row, int col) {
+        return false;
+      }
+    };
+    tabela = new JTable(modelo);
+    modelo.addColumn("IP");
+    modelo.addColumn("Porta");
+    tabela.getColumnModel().getColumn(0).setPreferredWidth(80);
+    tabela.getColumnModel().getColumn(1).setPreferredWidth(20);
+    //tabela.addMouseListener(new ActionSelecionarTabela());
   }
 }

@@ -1,7 +1,6 @@
 package br.com.unifor.socketcliente.server;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Scanner;
@@ -9,14 +8,14 @@ import java.util.Scanner;
 public class Server {
   private ListClient list = ListClient.getInstance();
   private Scanner scanner;
-  private PrintWriter writer;
+  private String ip;
 
   public Server() {
     try {
       ServerSocket server = new ServerSocket(55555);
       while (true) {
         Socket socket = server.accept();
-        String ip = socket.getInetAddress().toString().replace("/", "");
+        ip = socket.getInetAddress().toString().replace("/", "");
         if (!list.containsIp(ip)) {
           list.getClients().add(new Entity(socket, ip));
         } else {
@@ -33,7 +32,6 @@ public class Server {
     public EscutaCliente(Socket socket) {
       try {
         scanner = new Scanner(socket.getInputStream());
-        writer = new PrintWriter(socket.getOutputStream());
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -64,6 +62,8 @@ public class Server {
       Integer bloq = !App.txtBloqTotal.getText().equals("") ? Integer.parseInt(App.txtBloqTotal.getText()) : 0;
       Integer bloqTotal = bloq + Integer.parseInt(params[0]);
       App.txtBloqTotal.setText(bloqTotal.toString());
+
+      App.txtLog.setText(App.txtLog.getText() + ip + "  -  " + texto + "\n");
     }
   }
 }
