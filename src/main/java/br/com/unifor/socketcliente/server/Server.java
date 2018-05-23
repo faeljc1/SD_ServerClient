@@ -15,6 +15,7 @@ public class Server {
       ServerSocket server = new ServerSocket(55555);
       while (true) {
         Socket socket = server.accept();
+        new Thread(new CheckIp()).start();
         ip = socket.getInetAddress().toString().replace("/", "");
         if (!list.containsIp(ip)) {
           list.getClients().add(new Entity(socket, ip));
