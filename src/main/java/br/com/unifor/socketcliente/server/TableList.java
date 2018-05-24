@@ -15,7 +15,7 @@ public class TableList {
     return uniqueInstance;
   }
 
-  public void pesquisar() {
+  public synchronized void pesquisar() {
     App.modelo.setNumRows(0);
     for (Entity entity : clients) {
       App.modelo.addRow(new Object[]{entity.getIp(),
@@ -55,7 +55,7 @@ public class TableList {
     clients.clear();
   }
 
-  public List<Entity> getClients() {
+  public synchronized List<Entity> getClients() {
     return clients;
   }
 
@@ -63,7 +63,7 @@ public class TableList {
     this.clients = clients;
   }
 
-  public Boolean containsIp(String ip) {
+  public synchronized Boolean containsIp(String ip) {
     if (ip != null && !ip.equals("")) {
       for (Entity entity : clients) {
         if (entity.getIp().equals(ip)) {
@@ -74,7 +74,7 @@ public class TableList {
     return false;
   }
 
-  public Entity getEntity(String ip) {
+  public synchronized Entity getEntity(String ip) {
     if (ip != null && !ip.equals("")) {
       for (Entity entity : clients) {
         if (entity.getIp().equals(ip)) {

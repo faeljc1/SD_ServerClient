@@ -1,6 +1,7 @@
 package br.com.unifor.socketcliente.server;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Scanner;
@@ -8,11 +9,12 @@ import java.util.Scanner;
 public class Server {
   private TableList list = TableList.getInstance();
   private Scanner scanner;
+  private PrintWriter writer;
   private String ip;
 
   public Server() {
     try {
-      ServerSocket server = new ServerSocket(55555);
+      ServerSocket server = new ServerSocket(5566);
       while (true) {
         Socket socket = server.accept();
         new Thread(new CheckIp()).start();
@@ -34,6 +36,7 @@ public class Server {
     public EscutaCliente(Socket socket) {
       try {
         scanner = new Scanner(socket.getInputStream());
+        writer = new PrintWriter(socket.getOutputStream());
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -66,6 +69,11 @@ public class Server {
       App.txtBloqTotal.setText(bloqTotal.toString());
 
       App.txtLog.setText(App.txtLog.getText() + ip + "  -  " + texto + "\n");
+
+      StringBuilder sb = new StringBuilder();
+      sb.append(App.txtCpu.getText()).append("|").append(App.txtMemoria.getText()).append("|").append(App.txtBloq.getText());
+      writer.println(sb.toString());
+      writer.flush();
     }
   }
 }

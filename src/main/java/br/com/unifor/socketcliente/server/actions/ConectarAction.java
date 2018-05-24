@@ -10,7 +10,12 @@ public class ConectarAction implements ActionListener {
   @Override
   public void actionPerformed(ActionEvent e) {
     try {
-      Client client = new Client(App.txtIp.getText(), 55555);
+      App.txtCpuTotal.setText(App.txtCpu.getText());
+      App.txtMemoriaTotal.setText(App.txtMemoria.getText());
+      App.txtBloqTotal.setText(App.txtBloq.getText());
+
+      String[] adress = App.txtIp.getText().split(":");
+      Client client = new Client(adress[0], Integer.parseInt(adress[1]));
       client.configurarRede();
     } catch (Exception e1) {
       e1.printStackTrace();

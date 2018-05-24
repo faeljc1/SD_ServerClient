@@ -5,10 +5,12 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class Client {
+  private TableList list = TableList.getInstance();
   private Scanner scanner;
   private PrintWriter write;
   private String ipAddress;
   private Integer port;
+  private String ip;
 
   public Client(String ipAddress, int port) {
     this.ipAddress = ipAddress;
@@ -17,9 +19,16 @@ public class Client {
 
   public void configurarRede() throws Exception {
     Socket socket = new Socket(ipAddress, port);
-    scanner = new Scanner(System.in);
+    scanner = new Scanner(socket.getInputStream());
     write = new PrintWriter(socket.getOutputStream());
+    ip = socket.getLocalAddress().toString().replace("/", "");
+    if (!list.containsIp(ip)) {
+      list.getClients().add(new Entity(socket, ip));
+    } else {
+      list.getEntity(ip).setSocket(socket);
+    }
     new Thread(new Client.EscutaServidor()).start();
+    list.pesquisar();
   }
 
   private class EscutaServidor implements Runnable {
