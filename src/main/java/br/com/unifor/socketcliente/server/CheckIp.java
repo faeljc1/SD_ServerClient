@@ -39,7 +39,7 @@ public class CheckIp implements Runnable {
             address.isReachable(500); // this invocation is the offender
             nanos = System.nanoTime() - nanos;
           } catch (IOException e) {
-            System.out.println("Failed to reach host");
+            App.txtLog.setText(App.txtLog.getText() + address.getHostAddress() + " Failed to reach host" + "\n");
           }
           millis = Math.round(nanos / Math.pow(10, 6));
           System.out.println("Resposta do IP: " + address.getHostAddress() + " com de tempo=" + millis + " ms");
@@ -51,10 +51,10 @@ public class CheckIp implements Runnable {
         }
         System.out.println("Iterations: " + iterations);
       } else {
-        System.out.println("Host " + address.getHostName() + " is not reachable even once.");
+        App.txtLog.setText(App.txtLog.getText() + address.getHostAddress() + " is not reachable even once." + "\n");
       }
     } catch (IOException e) {
-      System.out.println("Network error.");
+      App.txtLog.setText(App.txtLog.getText() + address.getHostAddress() + ": Network error" + "\n");
     }
   }
 }

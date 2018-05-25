@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Server {
@@ -14,7 +15,7 @@ public class Server {
 
   public Server() {
     try {
-      ServerSocket server = new ServerSocket(5566);
+      ServerSocket server = new ServerSocket(5555);
       while (true) {
         Socket socket = server.accept();
         new Thread(new CheckIp()).start();
@@ -48,6 +49,9 @@ public class Server {
         while ((texto = scanner.nextLine()) != null) {
           encaminharParaTodos(texto);
         }
+
+      } catch (NoSuchElementException e) {
+        App.txtLog.setText(App.txtLog.getText() + ip + ": Connection crashed" + "\n");
       } catch (Exception e) {
         e.printStackTrace();
       }

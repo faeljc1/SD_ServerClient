@@ -1,6 +1,7 @@
 package br.com.unifor.socketcliente.server;
 
 import java.io.PrintWriter;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.util.Scanner;
 
@@ -18,17 +19,21 @@ public class Client {
   }
 
   public void configurarRede() throws Exception {
-    Socket socket = new Socket(ipAddress, port);
-    scanner = new Scanner(socket.getInputStream());
-    write = new PrintWriter(socket.getOutputStream());
-    ip = socket.getLocalAddress().toString().replace("/", "");
-    if (!list.containsIp(ip)) {
-      list.getClients().add(new Entity(socket, ip));
-    } else {
-      list.getEntity(ip).setSocket(socket);
+    try {
+      Socket socket = new Socket(ipAddress, port);
+      scanner = new Scanner(socket.getInputStream());
+      write = new PrintWriter(socket.getOutputStream());
+      ip = socket.getLocalAddress().toString().replace("/", "");
+      if (!list.containsIp(ip)) {
+        list.getClients().add(new Entity(socket, ip));
+      } else {
+        list.getEntity(ip).setSocket(socket);
+      }
+      new Thread(new Client.EscutaServidor()).start();
+      list.pesquisar();
+    } catch (ConnectException e) {
+      App.txtLog.setText(App.txtLog.getText() + ip + ": Connection refused" + "\n");
     }
-    new Thread(new Client.EscutaServidor()).start();
-    list.pesquisar();
   }
 
   private class EscutaServidor implements Runnable {
